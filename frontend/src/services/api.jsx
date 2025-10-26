@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Make sure this is HTTP, not HTTPS
-const API_BASE_URL = '/api';
+// ✅ Use your live Render backend URL
+const API_BASE_URL = 'https://primewave.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// ✅ Add auth token to every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -19,12 +19,10 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
+// ✅ Handle 401 errors (token expired → refresh)
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -32,27 +30,27 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const refreshToken = localStorage.getItem('refresh_token');
         const response = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
-          refresh: refreshToken
+          refresh: refreshToken,
         });
-        
+
         const newToken = response.data.access;
         localStorage.setItem('access_token', newToken);
-        
+
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Logout user
+        // If refresh fails, log out user
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
-    
+
     return Promise.reject(error);
   }
 );
