@@ -12,7 +12,9 @@ SECRET_KEY = env('SECRET_KEY', default='your-secret-key-here')
 
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+# ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
+ALLOWED_HOSTS = ['primewave.onrender.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'app.users',
