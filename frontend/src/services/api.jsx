@@ -3,6 +3,18 @@ import axios from 'axios';
 // ✅ Use your live Render backend URL
 const API_BASE_URL = 'https://primewave.onrender.com/api';
 
+// 🟢 Wake up backend (non-blocking request)
+(async () => {
+  try {
+    // Hit the root URL (outside `/api/`) to wake Render up
+    await fetch('https://primewave.onrender.com/', { method: 'GET' });
+    console.log('🌐 Backend wake-up ping sent');
+  } catch (err) {
+    console.log('⚠️ Backend wake-up failed (likely asleep):', err.message);
+  }
+})();
+
+// ✅ Axios instance setup
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
