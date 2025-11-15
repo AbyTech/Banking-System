@@ -3,11 +3,10 @@ services:
     name: banking-backend
     runtime: docker
     plan: starter
-    buildCommand: docker build -t banking-backend .
-    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+    rootDir: banking_system/backend
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: core.settings
+        value: app.core.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
@@ -40,6 +39,7 @@ services:
     name: banking-frontend
     runtime: static
     plan: starter
+    rootDir: banking_system/frontend
     buildCommand: npm run build
     staticPublishPath: ./dist
     envVars:
