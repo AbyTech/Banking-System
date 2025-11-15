@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import environ
+import dj_database_url
+
 
 env = environ.Env()
 environ.Env.read_env(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
@@ -12,9 +14,7 @@ SECRET_KEY = env('SECRET_KEY', default='your-secret-key-here')
 
 DEBUG = env.bool('DEBUG', default=False)
 
-# ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
-
-ALLOWED_HOSTS = ['primewave.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 INSTALLED_APPS = [
     'app.users',
@@ -79,19 +79,8 @@ WSGI_APPLICATION = 'app.core.wsgi.application'
 ASGI_APPLICATION = 'app.core.asgi.application'
 
 # Database
-# DATABASES = {
-#     'default': env.db('DATABASE_URL', default='postgres://primewave:primewave@localhost:5432/primewave_bank')
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'prime_wave',
-        'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '5433',
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 
@@ -156,13 +145,13 @@ CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[
     "http://127.0.0.1:3000",
 ])
 
-# ADDED: CSRF Trusted Origins
-CSRF_TRUSTED_ORIGINS = [
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:8000", 
+    "http://localhost:8000",
     "http://127.0.0.1:8000",
-]
+])
 
 # ADDED: Allow all origins in development
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all in development
