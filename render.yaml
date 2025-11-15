@@ -25,29 +25,10 @@ services:
           type: web
           name: banking-backend
           property: host
-      - key: RENDER_FRONTEND_URL
-        fromService:
-          type: web
-          name: banking-frontend
-          property: host
       - key: ALLOWED_HOSTS
         value: localhost,127.0.0.1
       - key: CORS_ALLOWED_ORIGINS
         value: http://localhost:3000,http://127.0.0.1:3000
-
-  - type: web
-    name: banking-frontend
-    runtime: static
-    plan: starter
-    rootDir: banking_system/frontend
-    buildCommand: npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: banking-backend
-          property: host
 
 databases:
   - name: banking-db
