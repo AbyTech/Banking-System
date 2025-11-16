@@ -3,7 +3,7 @@ services:
     name: banking-backend
     runtime: docker
     plan: starter
-    buildCommand: "pip install -r requirements.txt && python manage.py migrate"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: app.core.settings

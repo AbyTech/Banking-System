@@ -17,9 +17,9 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 # Dynamically add Render hostname to allowed hosts
-RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME', default=None)
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+RENDER_EXTERNAL_URL = env('RENDER_EXTERNAL_URL', default=None)
+if RENDER_EXTERNAL_URL:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_URL.split('//')[-1])
 
 
 INSTALLED_APPS = [
@@ -82,9 +82,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.core.wsgi.application'
 ASGI_APPLICATION = 'app.core.asgi.application'
 
+
 # Database
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 # Password validation
